@@ -50,3 +50,36 @@ variable "private_subnet_cidr_blocks" {
     "10.0.104.0/24"
   ]
 }
+
+variable "settings" {
+  description = "Configuration settings"
+  type        = map(any)
+  default = {
+    "database" = {
+      allocated_storage   = 10
+      engine              = "mysql"
+      engine_version      = "8.0.27"
+      instance_class      = "db.t2.micro"
+      db_name             = "tutorial"
+      skip_final_snapshot = true
+    }
+  }
+}
+
+// This variables contains the database user
+// Stored in a secrets file
+// @TODO
+variable "db_username" {
+  description = "Database master user"
+  type        = string
+  sensitive   = true
+}
+
+# // This variables contains the database user password
+# // Stored in a secrets file
+// @TODO
+variable "db_password" {
+  description = "Database master user password"
+  type        = string
+  sensitive   = true
+}

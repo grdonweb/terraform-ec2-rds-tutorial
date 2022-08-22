@@ -157,3 +157,18 @@ resource "aws_db_subnet_group" "tutorial_db_subnet_group" {
 
   subnet_ids = [for subnet in aws_subnet.tutorial_pri_subnet : subnet.id]
 }
+
+// Step 7: Mysql RDS 
+
+resource "aws_db_instance" "tutorial_db" {
+  allocated_storage      = var.settings.database.allocated_storage
+  engine                 = var.settings.database.engine
+  engine_version         = var.settings.database.engine_version
+  instance_class         = var.settings.database.instance_class
+  db_name                = var.settings.database.db_name
+  username               = var.db_username
+  password               = var.db_password
+  db_subnet_group_name   = aws_db_subnet_group.tutorial_db_subnet_group.id
+  vpc_security_group_ids = [aws_security_group.tutorial_db_sg.id]
+  skip_final_snapshot    = var.settings.database.skip_final_snapshot
+}
