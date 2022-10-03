@@ -62,6 +62,10 @@ variable "settings" {
       instance_class      = "db.t2.micro"
       db_name             = "tutorial"
       skip_final_snapshot = true
+    },
+    "web_app" = {
+      count         = 1
+      instance_type = "t2.micro" //ec2 instances
     }
   }
 }
