@@ -30,7 +30,7 @@ resource "aws_vpc" "tutorial_vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "tutorial_vpc∂"
+    Name = "tutorial_vpc"
   }
 }
 
@@ -43,9 +43,9 @@ resource "aws_internet_gateway" "tutorial_igw" {
   }
 }
 
-//Step3: Subnets
+# //Step3: Subnets
 
-//Public Subnet
+# //Public Subnet
 resource "aws_subnet" "tutorial_pub_subnet" {
   count             = var.subnet_count.public
   vpc_id            = aws_vpc.tutorial_vpc.id
@@ -56,7 +56,7 @@ resource "aws_subnet" "tutorial_pub_subnet" {
   }
 }
 
-//Private Subnet
+# //Private Subnet
 resource "aws_subnet" "tutorial_pri_subnet" {
   count             = var.subnet_count.private
   vpc_id            = aws_vpc.tutorial_vpc.id
@@ -179,16 +179,34 @@ resource "aws_db_instance" "tutorial_db" {
 
 // Step 8: Creating EC2
 
-#s3 saved -- TODO
-# resource "tls_private_key" "tutorial_pk" {
-#   algorithm = "RSA"
-# }
-
 resource "aws_key_pair" "tutorial_kp_final" {
   key_name   = "tutorial_kp_final"
   public_key = file("tutorial_kp.pub")
   //public_key = file("/Users/grimanesa/.ssh/aws_ec2_terraform_key.pub")
 }
+
+
+
+//TODO:IMPROVE Key pair - generate differents
+# resource "aws_key_pair" "tutorial_kp_final" {
+#   key_name   = "b18ca9ef-8959-3ac4-b206-a0985377b41f"
+#   public_key = tls_private_key.t.public_key_openssh
+# }
+
+# provider "tls" {}
+# resource "tls_private_key" "t" {
+#   algorithm = "RSA"
+# }
+
+# provider "local" {}
+# resource "local_file" "key" {
+#   content  = tls_private_key.t.private_key_pem
+#   filename = "id_rsa"
+#   provisioner "local-exec" {
+#     command = "chmod 600 id_rsa"
+#   }
+# }
+
 data "aws_ami" "ubuntu" {
   most_recent = "true"
   filter {
@@ -212,6 +230,11 @@ resource "aws_instance" "tutorial_web" {
   tags = {
     Name = "tutorial_web_${count.index}"
   }
+  user_data = file("init.sh")
+  //Review depends_on
+  depends_on = [
+    aws_db_instance.tutorial_db
+  ]
 
 }
 
@@ -223,4 +246,3 @@ resource "aws_eip" "tutorial_web_eip" {
     Name = "tutorial_web_eip_${count.index}"
   }
 }
-
