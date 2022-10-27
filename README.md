@@ -10,6 +10,8 @@ https://medium.com/strategio/using-terraform-to-create-aws-vpc-ec2-and-rds-insta
 better management of KeyPairs, saving in S3 bucket
 save state in S3
 Ansible script init.sh
+Investigate how to implement modules:
+https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest
 
 ## In long term:
 
